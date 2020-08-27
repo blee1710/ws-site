@@ -1,8 +1,11 @@
+require('dotenv').config()
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser")
+const mongoose = require('mongoose');
 
 const port = 3000
+const connectionString = process.env.CONNECTION_STRING
 
 var webseries =[
     {name: "The Wandering Inn", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1533270114l/41033158._SY475_.jpg"},
@@ -20,9 +23,34 @@ var webseries =[
 ];
 
 
+
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.set("view engine", "ejs");
+
+
+mongoose.connect(connectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('Connected to DB!'))
+.catch(error => console.log(error.message));
+
+// var wsSchema = new mongoose.Schema({
+//     name: String,
+//     image: String
+// });
+
+// var Webseries = mongoose.model("Webseries", wsSchema);
+
+// Webseries.create
+
+// var test = new Webseries({
+//     name: "Test",
+//     image: "Test"
+// })
+
+// test.save();
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -38,6 +66,11 @@ app.post("/webseries", function(req,res){
     var image = req.body.image;
     var newWebseries = {name: name, image: image};
     webseries.push(newWebseries);
+    wsCollect.insertOne(newWebseries)
+        .then(result => {
+            console.log(result)
+        })
+        .catch(error => console.error(error))
 
     res.redirect("/webseries")
 })
@@ -49,3 +82,6 @@ app.get("/webseries/new", function(req,res) {
 app.listen(port, () => {
     console.log("WSReview Server has started!");
 });
+
+
+
