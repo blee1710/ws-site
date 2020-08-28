@@ -3,14 +3,16 @@ require('dotenv').config()
 var express     = require("express"),
     app         = express(),
     bodyParser  = require("body-parser"),
-    mongoose    = require('mongoose');
+    mongoose    = require('mongoose'),
+    Webseries   = require("./models/webseries"),
+    seedDB      = require("./seeds")
 
 const port = 3000
 const connectionString = process.env.CONNECTION_STRING
 
 
 
-
+seedDB();
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -24,14 +26,6 @@ mongoose.connect(connectionString, {
 .then(() => console.log('Connected to DB!'))
 .catch(error => console.log(error.message));
 
-// SCHEMA SETUP
-var webseriesSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
-
-var Webseries = mongoose.model("Webseries", webseriesSchema);
 
 // Webseries.create(
 //     {name: "The Wandering Inn", 
