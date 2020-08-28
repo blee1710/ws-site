@@ -20,7 +20,7 @@ const connectionString = process.env.CONNECTION_STRING
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.set("view engine", "ejs");
-
+app.use(express.static(__dirname + "/public"))
 
 mongoose.connect(connectionString, {
   useNewUrlParser: true,
