@@ -22,14 +22,21 @@ var data = [
  
 function seedDB(){
    //Remove all webseries
-   Webseries.remove({}, function(err){
+   Webseries.remove({}, (err) =>{
         if(err){
             console.log(err);
         }
         console.log("removed webseries!");
+
+        Comment.remove({}, (err) =>{
+            if(err){
+                console.log(err)
+            }
+            console.log("removed comments!")
+        })
         //add a few webseries
-        data.forEach(function(seed){
-            Webseries.create(seed, function(err, webseries){
+        data.forEach((seed) =>{
+            Webseries.create(seed, (err, webseries) =>{
                 if(err){
                     console.log(err)
                 } else {
@@ -39,7 +46,7 @@ function seedDB(){
                         {
                             text: "This series is great!",
                             author: "John"
-                        }, function(err, comment) {
+                        }, (err, comment) => {
                             if (err) {
                                 console.log(err)
                             } else {
