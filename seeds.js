@@ -43,7 +43,7 @@ function seedDB(){
                             if (err) {
                                 console.log(err)
                             } else {
-                                webseries.comment.push(comment)
+                                webseries.comments.push(comment)
                                 webseries.save()
                                 console.log("Comment made!")
                             }

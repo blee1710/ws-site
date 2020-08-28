@@ -12,7 +12,7 @@ const connectionString = process.env.CONNECTION_STRING
 
 
 
-seedDB();
+
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -26,37 +26,7 @@ mongoose.connect(connectionString, {
 .then(() => console.log('Connected to DB!'))
 .catch(error => console.log(error.message));
 
-
-// Webseries.create(
-//     {name: "The Wandering Inn", 
-//     image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1533270114l/41033158._SY475_.jpg",
-//     description: "Really long series, a Banger."
-//     }, (err, webseries) => {
-//         if(err){
-//             console.log(err);
-//         } else {
-//             console.log("New Webseries!")
-//             console.log(webseries)
-//         }
-//     }
-//     );
-
-// END SCHEMA SETUP
-
-// var webseries =[
-//     {name: "The Wandering Inn", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1533270114l/41033158._SY475_.jpg"},
-//     {name: "Mother of Learning", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1591656311l/51164865._SX318_.jpg"},
-//     {name: "Worm", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1519662877i/18713259._UY437_SS437_.jpg"},
-//     {name: "The Wandering Inn", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1533270114l/41033158._SY475_.jpg"},
-//     {name: "Mother of Learning", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1591656311l/51164865._SX318_.jpg"},
-//     {name: "Worm", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1519662877i/18713259._UY437_SS437_.jpg"},
-//     {name: "The Wandering Inn", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1533270114l/41033158._SY475_.jpg"},
-//     {name: "Mother of Learning", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1591656311l/51164865._SX318_.jpg"},
-//     {name: "Worm", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1519662877i/18713259._UY437_SS437_.jpg"},
-//     {name: "The Wandering Inn", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1533270114l/41033158._SY475_.jpg"},
-//     {name: "Mother of Learning", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1591656311l/51164865._SX318_.jpg"},
-//     {name: "Worm", image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1519662877i/18713259._UY437_SS437_.jpg"}
-// ];
+seedDB();
 
 // GETS LANDING PAGE
 app.get("/", function(req, res){
@@ -99,7 +69,7 @@ app.get("/webseries/new", function(req,res) {
 
 // SHOWS INFO ABOUT ONE WEBSERIES
 app.get("/webseries/:id", function(req,res){
-    Webseries.findById(req.params.id, (err, foundWebseries) =>{
+    Webseries.findById(req.params.id).populate("comments").exec((err, foundWebseries) =>{
         if(err){
             console.log(err);
         } else {
