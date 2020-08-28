@@ -1,4 +1,4 @@
-<%- include("partials/header") %>
+<%- include("../partials/header") %>
 
 <h1> <%= webseries.name %> </h1>
 
@@ -6,6 +6,9 @@
 
 <p><%= webseries.description %></p>
 
+<p>
+    <a class="btn btn-success" href="/webseries/<%= webseries._id %>/comments/new"> Add a new comment </a>
+</p>
 <% webseries.comments.forEach(function(comment){ %>
     <p>
        <strong> <%= comment.author %> </strong>
@@ -13,4 +16,4 @@
     </p>
 <% }) %>
 
-<%- include("partials/footer") %>
+<%- include("../partials/footer") %>

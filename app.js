@@ -1,3 +1,5 @@
+const webseries = require('./models/webseries');
+
 require('dotenv').config()
 
 var express     = require("express"),
@@ -5,6 +7,7 @@ var express     = require("express"),
     bodyParser  = require("body-parser"),
     mongoose    = require('mongoose'),
     Webseries   = require("./models/webseries"),
+    Comment     = require("./models/comment"),
     seedDB      = require("./seeds")
 
 const port = 3000
@@ -29,25 +32,25 @@ mongoose.connect(connectionString, {
 seedDB();
 
 // GETS LANDING PAGE
-app.get("/", function(req, res){
+app.get("/", (req, res) => {
     res.render("landing");
 });
 
 // SHOWS ALL WEBSERIES
-app.get("/webseries", function(req, res){
+app.get("/webseries", (req, res) => {
     Webseries.find({}, (err, webseries) => {
         if (err){
             console.log(err);
         } else {
-            res.render("index", {webseries:webseries})
+            res.render("webseries/index", {webseries:webseries})
         }
     }
     )
-})
+});
     // res.render("webseries", {webseries:webseries});
 
 // CREATES NEW WEBSERIES
-app.post("/webseries", function(req,res){
+app.post("/webseries", (req,res) => {
     var name = req.body.name ;
     var image = req.body.image;
     var desc = req.body.description;
@@ -59,12 +62,12 @@ app.post("/webseries", function(req,res){
             res.redirect("/webseries")
         }
     })
-})
+});
 
 // SHOWS FORM TO CREATE NEW WEBSERIES
-app.get("/webseries/new", function(req,res) {
-    res.render("new.ejs");
-})
+app.get("/webseries/new", (req,res) => {
+    res.render("comments/new.ejs");
+});
 
 
 // SHOWS INFO ABOUT ONE WEBSERIES
@@ -73,10 +76,41 @@ app.get("/webseries/:id", function(req,res){
         if(err){
             console.log(err);
         } else {
-            res.render("show", {webseries:foundWebseries});
+            res.render("webseries/show", {webseries:foundWebseries});
         }
     });
-})
+});
+
+// COMMENTS ROUTES
+
+app.get("/webseries/:id/comments/new", (req, res) =>{
+    Webseries.findById(req.params.id, (err, webseries) =>{
+        if(err){
+            console.log(err)
+        } else {
+            res.render("comments/new", {webseries:webseries});
+        }
+    })
+});
+
+app.post("/webseries/:id/comments", (req, res) => {
+    Webseries.findById(req.params.id, (err, webseries) => {
+        if (err){
+            console.log(err)
+            res.redirect("/webseries")
+        } else {
+            Comment.create(req.body.comment, (err, comment) => {
+                if(err){
+                    console.log(err);
+                } else {
+                    webseries.comments.push(comment)
+                    webseries.save();
+                    res.redirect("/webseries/" + webseries._id);
+                }
+            })
+        }
+    })
+});
 
 app.listen(port, () => {
     console.log("WSReview Server has started!");
