@@ -39,6 +39,8 @@
                             <p>
                                 <%= comment.text %>
                             </p>
+                            <a class="btn btn-xs btn-warning" 
+                                href="/webseries/<%= webseries._id %>/comments/<%= comment._id %>/edit"> Edit </a>
                         </div>
                     </div>
                 <% }) %>

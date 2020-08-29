@@ -38,6 +38,28 @@ router.post("/", isLoggedIn, (req, res) => {
     })
 });
 
+// GENERATE COMMENT EDIT FORM
+router.get("/:comment_id/edit", (req, res) => {
+    Comment.findById(req.params.comment_id, (err, foundComment) => {
+        if (err){
+            res.redirect("back")
+        } else {
+            res.render("comments/edit", {webseries_id: req.params.id, comment: foundComment})
+        }
+    })
+});
+
+// UPDATE COMMENT
+router.put("/:comment_id", (req, res) => {
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, (err, updatedComment) => {
+        if(err) {
+            res.redirect("back")
+        } else {
+            res.redirect("/webseries/" + req.params.id)
+        }
+    })
+})
+
 // Middleware
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
