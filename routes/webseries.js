@@ -15,11 +15,15 @@ router.get("/", (req, res) => {
 });
 
 // CREATES NEW WEBSERIES
-router.post("/", (req,res) => {
+router.post("/", isLoggedIn, (req,res) => {
     var name = req.body.name ;
     var image = req.body.image;
     var desc = req.body.description;
-    var newWebseries = {name: name, image: image, description: desc};
+    var user = {
+        id: req.user._id,
+        username: req.user.username
+    }
+    var newWebseries = {name: name, image: image, description: desc, user: user};
     Webseries.create(newWebseries, (err, newlyCreated) =>{
         if(err){
             console.log(err);
@@ -30,7 +34,7 @@ router.post("/", (req,res) => {
 });
 
 // SHOWS FORM TO CREATE NEW WEBSERIES
-router.get("/new", (req,res) => {
+router.get("/new", isLoggedIn, (req,res) => {
     res.render("webseries/new.ejs");
 });
 
@@ -46,5 +50,12 @@ router.get("/:id", function(req,res){
     });
 });
 
+// Middleware
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login")
+}
 
 module.exports = router;
