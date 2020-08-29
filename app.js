@@ -13,7 +13,6 @@ var express         = require("express"),
     User            = require("./models/user"),
     seedDB          = require("./seeds")
 
-const port = 3000
 const connectionString = process.env.CONNECTION_STRING
 
 var commentRoutes = require("./routes/comments")
@@ -65,7 +64,7 @@ app.use(indexRoutes);
 app.use("/webseries", webseriesRoutes);
 app.use("/webseries/:id/comments", commentRoutes);
 
-app.listen(port, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("WSReview Server has started!");
 });
 
