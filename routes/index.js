@@ -21,9 +21,7 @@ router.post("/register", (req, res) => {
             console.log(err);
             return res.render("register");
         }
-        console.log("pre auth")
         passport.authenticate("local")(req, res, () => {
-            console.log("reached")
             res.redirect("/webseries");
         });
     });

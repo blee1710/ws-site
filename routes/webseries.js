@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
-var Webseries = require("../models/webseries")
+var Webseries = require("../models/webseries");
+const webseries = require("../models/webseries");
 
 // SHOWS ALL WEBSERIES
 router.get("/", (req, res) => {
@@ -51,17 +52,15 @@ router.get("/:id", (req,res) => {
 });
 
 //EDIT WEBSERIES
-router.get("/:id/edit", (req, res) => {
-    Webseries.findById(req.params.id, (err, foundWebseries) => {
-        if (err) {
-            res.redirect("/webseries");
+router.get("/:id/edit", checkWebseriesOwnership, (req, res) => {
+        Webseries.findById(req.params.id, (err, foundWebseries) => {
+            res.render("webseries/edit", {webseries: foundWebseries});
         }
-        res.render("webseries/edit", {webseries: foundWebseries});
-    })
+    )
 });
 
 //UPDATE WEBSERIES
-router.put("/:id", (req, res) => {
+router.put("/:id", checkWebseriesOwnership, (req, res) => {
     Webseries.findByIdAndUpdate(req.params.id, req.body.webseries, (err, updatedWebseries) => {
         if(err){
             res.redirect("/webseries")
@@ -72,7 +71,7 @@ router.put("/:id", (req, res) => {
 });
 
 //DESTROY WEBSERIES
-router.delete("/:id", async (req,res) => {
+router.delete("/:id", checkWebseriesOwnership, async (req,res) => {
     try {
         let foundWebseries = await Webseries.findById(req.params.id);
         await foundWebseries.remove();
@@ -89,6 +88,24 @@ function isLoggedIn(req, res, next){
         return next();
     }
     res.redirect("/login")
+}
+
+function checkWebseriesOwnership(req, res, next) {
+    if(req.isAuthenticated()) {
+        Webseries.findById(req.params.id, (err, foundWebseries) => {
+            if (err) {
+                res.redirect("back");
+            } else {
+                if(foundWebseries.user.id.equals(req.user._id) ){
+                    next()
+                } else {
+                    res.redirect("back")
+                }
+            }
+        })
+    } else {
+        res.redirect("back")
+    }
 }
 
 module.exports = router;
