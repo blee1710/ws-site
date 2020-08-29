@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router({mergeParams: true});
+const Webseries = require("../models/webseries");
 var Comment = require("../models/comment");
 
 // New Comment

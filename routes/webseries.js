@@ -71,6 +71,18 @@ router.put("/:id", (req, res) => {
     })
 });
 
+//DESTROY WEBSERIES
+router.delete("/:id", async (req,res) => {
+    try {
+        let foundWebseries = await Webseries.findById(req.params.id);
+        await foundWebseries.remove();
+        res.redirect("/webseries");
+    } catch (err) {
+        console.log(err.message);
+        res.redirect("/webseries")
+    }
+});
+
 // Middleware
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
