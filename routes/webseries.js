@@ -40,7 +40,7 @@ router.get("/new", isLoggedIn, (req,res) => {
 
 
 // SHOWS INFO ABOUT ONE WEBSERIES
-router.get("/:id", function(req,res){
+router.get("/:id", (req,res) => {
     Webseries.findById(req.params.id).populate("comments").exec((err, foundWebseries) =>{
         if(err){
             console.log(err);
@@ -48,6 +48,27 @@ router.get("/:id", function(req,res){
             res.render("webseries/show", {webseries:foundWebseries});
         }
     });
+});
+
+//EDIT WEBSERIES
+router.get("/:id/edit", (req, res) => {
+    Webseries.findById(req.params.id, (err, foundWebseries) => {
+        if (err) {
+            res.redirect("/webseries");
+        }
+        res.render("webseries/edit", {webseries: foundWebseries});
+    })
+});
+
+//UPDATE WEBSERIES
+router.put("/:id", (req, res) => {
+    Webseries.findByIdAndUpdate(req.params.id, req.body.webseries, (err, updatedWebseries) => {
+        if(err){
+            res.redirect("/webseries")
+        } else {
+            res.redirect("/webseries/" + req.params.id)
+        }
+    })
 });
 
 // Middleware
