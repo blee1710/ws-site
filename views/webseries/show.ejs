@@ -22,7 +22,7 @@
                     </p>
                     <% if(currentUser && webseries.user.id.equals(currentUser._id)) { %>
                         <a class="btn btn-xs btn-warning" href="/webseries/<%= webseries._id %>/edit"> Edit </a>
-                        <form id="deleteForm" action="/webseries/<%= webseries._id %>?_method=DELETE" method="POST">
+                        <form class="deleteForm" action="/webseries/<%= webseries._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-xs btn-danger"> Delete </button>
                         </form>
                     <% } %>
@@ -40,7 +40,11 @@
                                 <%= comment.text %>
                             </p>
                             <a class="btn btn-xs btn-warning" 
-                                href="/webseries/<%= webseries._id %>/comments/<%= comment._id %>/edit"> Edit </a>
+                                href="/webseries/<%= webseries._id %>/comments/<%= comment._id %>/edit"> Edit 
+                            </a>
+                            <form class="deleteForm" action="/webseries/<%= webseries._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                                <button class="btn btn-xs btn-danger"> Delete </button>
+                            </form>
                         </div>
                     </div>
                 <% }) %>
