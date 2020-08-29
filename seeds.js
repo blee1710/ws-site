@@ -35,30 +35,30 @@ function seedDB(){
             console.log("removed comments!")
         })
         //add a few webseries
-        data.forEach((seed) =>{
-            Webseries.create(seed, (err, webseries) =>{
-                if(err){
-                    console.log(err)
-                } else {
-                    console.log("added a webseires");
-                    // Create a comment
-                    Comment.create(
-                        {
-                            text: "This series is great!",
-                            author: "John"
-                        }, (err, comment) => {
-                            if (err) {
-                                console.log(err)
-                            } else {
-                                webseries.comments.push(comment)
-                                webseries.save()
-                                console.log("Comment made!")
-                            }
-                        }
-                        )
-                }
-            });
-        });
+        // data.forEach((seed) =>{
+        //     Webseries.create(seed, (err, webseries) =>{
+        //         if(err){
+        //             console.log(err)
+        //         } else {
+        //             console.log("added a webseires");
+        //             // Create a comment
+        //             Comment.create(
+        //                 {
+        //                     text: "This series is great!",
+        //                     author: "John"
+        //                 }, (err, comment) => {
+        //                     if (err) {
+        //                         console.log(err)
+        //                     } else {
+        //                         webseries.comments.push(comment)
+        //                         webseries.save()
+        //                         console.log("Comment made!")
+        //                     }
+        //                 }
+        //                 )
+        //         }
+        //     });
+        // });
     }); 
 }
  

@@ -18,8 +18,6 @@ var commentRoutes = require("./routes/comments")
 var webseriesRoutes = require("./routes/webseries")
 var indexRoutes = require("./routes/index")
 
-
-
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.set("view engine", "ejs");
@@ -32,7 +30,7 @@ mongoose.connect(connectionString, {
 .then(() => console.log('Connected to DB!'))
 .catch(error => console.log(error.message));
 
-seedDB();
+// seedDB();
 
 // PASSPORT CONFIG
 app.use(require("express-session")({
@@ -55,8 +53,8 @@ app.use((req, res, next) => {
 
 //ROUTING
 app.use(indexRoutes);
-app.use("/webseries/:id/comments", commentRoutes);
 app.use("/webseries", webseriesRoutes);
+app.use("/webseries/:id/comments", commentRoutes);
 
 app.listen(port, () => {
     console.log("WSReview Server has started!");

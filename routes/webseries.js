@@ -31,7 +31,7 @@ router.post("/", (req,res) => {
 
 // SHOWS FORM TO CREATE NEW WEBSERIES
 router.get("/new", (req,res) => {
-    res.render("comments/new.ejs");
+    res.render("webseries/new.ejs");
 });
 
 
