@@ -76,9 +76,9 @@ router.delete("/:id", middleware.checkWebseriesOwnership, async (req,res) => {
     try {
         let foundWebseries = await Webseries.findById(req.params.id);
         await foundWebseries.remove();
+        req.flash("success", "Webseries deleted!")
         res.redirect("/webseries");
     } catch (err) {
-        console.log(err.message);
         res.redirect("/webseries")
     }
 });

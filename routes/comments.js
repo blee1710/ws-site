@@ -19,7 +19,7 @@ router.get("/new", middleware.isLoggedIn, (req, res) =>{
 router.post("/", middleware.isLoggedIn, (req, res) => {
     Webseries.findById(req.params.id, (err, webseries) => {
         if (err){
-            console.log(err)
+            req.flash("error", "Something went wrong!")
             res.redirect("/webseries")
         } else {
             Comment.create(req.body.comment, (err, comment) => {
@@ -32,6 +32,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
                     
                     webseries.comments.push(comment)
                     webseries.save();
+                    req.flash("success", "Successfully added a comment!")
                     res.redirect("/webseries/" + webseries._id);
                 }
             })
@@ -65,8 +66,10 @@ router.put("/:comment_id", middleware.checkCommentOwnership, (req, res) => {
 router.delete("/:comment_id", middleware.checkCommentOwnership, (req, res) => {
     Comment.findByIdAndRemove(req.params.comment_id, (err) =>{
         if(err){
+            req.flash("error", "Something went wrong!")
             res.redirect("back")
         } else {
+            req.flash("success", "Webseries deleted!")
             res.redirect("/webseries/" + req.params.id)
         }
     })
