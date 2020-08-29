@@ -1,4 +1,5 @@
 var express = require("express");
+var middleware = require("../middleware")
 var router = express.Router();
 var Webseries = require("../models/webseries");
 const webseries = require("../models/webseries");
@@ -16,7 +17,7 @@ router.get("/", (req, res) => {
 });
 
 // CREATES NEW WEBSERIES
-router.post("/", isLoggedIn, (req,res) => {
+router.post("/", middleware.isLoggedIn, (req,res) => {
     var name = req.body.name ;
     var image = req.body.image;
     var desc = req.body.description;
@@ -35,7 +36,7 @@ router.post("/", isLoggedIn, (req,res) => {
 });
 
 // SHOWS FORM TO CREATE NEW WEBSERIES
-router.get("/new", isLoggedIn, (req,res) => {
+router.get("/new", middleware.isLoggedIn, (req,res) => {
     res.render("webseries/new.ejs");
 });
 
@@ -52,7 +53,7 @@ router.get("/:id", (req,res) => {
 });
 
 //EDIT WEBSERIES
-router.get("/:id/edit", checkWebseriesOwnership, (req, res) => {
+router.get("/:id/edit", middleware.checkWebseriesOwnership, (req, res) => {
         Webseries.findById(req.params.id, (err, foundWebseries) => {
             res.render("webseries/edit", {webseries: foundWebseries});
         }
@@ -60,7 +61,7 @@ router.get("/:id/edit", checkWebseriesOwnership, (req, res) => {
 });
 
 //UPDATE WEBSERIES
-router.put("/:id", checkWebseriesOwnership, (req, res) => {
+router.put("/:id", middleware.checkWebseriesOwnership, (req, res) => {
     Webseries.findByIdAndUpdate(req.params.id, req.body.webseries, (err, updatedWebseries) => {
         if(err){
             res.redirect("/webseries")
@@ -71,7 +72,7 @@ router.put("/:id", checkWebseriesOwnership, (req, res) => {
 });
 
 //DESTROY WEBSERIES
-router.delete("/:id", checkWebseriesOwnership, async (req,res) => {
+router.delete("/:id", middleware.checkWebseriesOwnership, async (req,res) => {
     try {
         let foundWebseries = await Webseries.findById(req.params.id);
         await foundWebseries.remove();
@@ -81,31 +82,5 @@ router.delete("/:id", checkWebseriesOwnership, async (req,res) => {
         res.redirect("/webseries")
     }
 });
-
-// Middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login")
-}
-
-function checkWebseriesOwnership(req, res, next) {
-    if(req.isAuthenticated()) {
-        Webseries.findById(req.params.id, (err, foundWebseries) => {
-            if (err) {
-                res.redirect("back");
-            } else {
-                if(foundWebseries.user.id.equals(req.user._id) ){
-                    next()
-                } else {
-                    res.redirect("back")
-                }
-            }
-        })
-    } else {
-        res.redirect("back")
-    }
-}
 
 module.exports = router;
